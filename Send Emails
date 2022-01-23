@@ -1,0 +1,75 @@
+function sendEmails() {
+
+  
+  var currentSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1").activate()
+  lr = currentSheet.getLastRow();   
+  
+  //var numberleft = MailApp.getRemainingDailyQuota();
+  //Logger.log(numberleft);
+
+  //start from row 2    
+  for (var i=2;i<=lr;i++)   {
+    
+    var currentEmail = currentSheet.getRange(i,2).getValue();   //email is in column 2
+    if (currentEmail==""){
+      continue
+    }
+
+    var currentSubject = currentSheet.getRange(i,5).getValue();
+    var cc = currentSheet.getRange(i,3).getValue();
+    var bcc = currentSheet.getRange(i,4).getValue();
+    var message = currentSheet.getRange(i,6).getValue();
+    var facility = currentSheet.getRange(i,1).getValue();
+
+    
+    
+    //clinicians have orientation day tomorrow; start from row 2, column G
+    var data = currentSheet.getRange(2, 7, currentSheet.getLastRow(), 14).getValues();  
+    
+    
+    //build table
+    var body = "<div>"+message+"</div><br>";
+    body += "  <table border=”1”>"
+    body += "<tr>"
+    body += "<td><b>Facility</td>"
+    body += "<td><b>First Name</td>"
+    body += "<td><b>Last Name</td>"
+    body += "<td><b>Email</td>"
+    body += "<td><b>Phone</td>"
+    body += "<td><b>Start Date</td>"
+    body += "<td><b>Specialty</td>"
+    body += "<td><b>Degree</td>"
+    body += "</b> </tr>"
+
+    for(var j=1;j<data.length; j++){
+      
+      if (data[j][7] == facility){
+        body += "<tr>"
+        body += "<td>" + facility + "</td>"
+        body += "<td>" + data[j][0] + "</td>"
+        body += "<td>" + data[j][0] + "</td>"
+        body += "<td>" + data[j][1] + "</td>"
+        body += "<td>" + data[j][2] + "</td>"
+        body += "<td>" + data[j][3] + "</td>"
+        body += "<td>" + Utilities.formatDate(data[j][4],'CST',"MM/dd/yy") + "</td>"
+        body += "<td>" + data[j][5] + "</td>"
+        body += "<td>" + data[j][6] + "</td>"
+        body += "</tr>"
+      }
+      }
+    //end of table tag
+    body +="</table>"
+
+    
+
+    MailApp.sendEmail(currentEmail,currentSubject,"",{
+      htmlBody:body,
+      cc:cc,
+      bcc:bcc,
+      replyTo: "***",
+      name: "***"
+    })
+  }
+}
+
+      
