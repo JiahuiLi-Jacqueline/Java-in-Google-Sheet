@@ -47,7 +47,6 @@ function sendEmails() {
         body += "<tr>"
         body += "<td>" + facility + "</td>"
         body += "<td>" + data[j][0] + "</td>"
-        body += "<td>" + data[j][0] + "</td>"
         body += "<td>" + data[j][1] + "</td>"
         body += "<td>" + data[j][2] + "</td>"
         body += "<td>" + data[j][3] + "</td>"
