@@ -1,0 +1,24 @@
+function DuplicateRow() {
+  var currentSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("4/1 summary").activate();
+  var data = currentSheet.getRange(1,2,20000,6).getValues();
+  
+  var newData = [];
+  for(var n in data){
+    
+    if(!Number(data[n][5])){continue};// if column 7 is not a number, do nothing
+    if(Number(data[n][5]<=0)){
+      continue
+    };
+  
+    
+    for(var c=0 ; c < Number(data[n][5]) ; c++){ 
+      newData.push(data[n].slice(0,3));//store values
+    }
+    
+    
+  }
+ 
+  newSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("4/1 Open Needs").activate();
+  newSheet.getRange(2,1,20000,9).clearContent();
+  newSheet.getRange(2,1,newData.length,newData[0].length).setValues(newData);// write new data to new sheet
+}
