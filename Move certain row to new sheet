@@ -1,0 +1,27 @@
+function MoveToFilled() {
+  var currentSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("4/1 Open Needs").activate();
+  var urange = currentSheet.getRange(2,1,2000,9);
+  var data = urange.getValues();
+  /*
+  var cInfo = [];
+  for (n in data){
+    if (data[n][0] ==""){
+      continue;
+    }
+    cInfo.push(data[n]);
+  }
+  */
+  var targetSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Filled");
+
+  for (var i=0; i<data.length; i++){
+      if (data[i][3]!=""){
+        targetSheet.appendRow(data[i]);
+        
+      }
+    
+  }
+  DuplicateRow();
+
+
+
+}
