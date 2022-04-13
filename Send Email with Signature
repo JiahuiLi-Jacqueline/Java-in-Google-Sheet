@@ -1,0 +1,94 @@
+function sendEmails() {
+
+  
+  var currentSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1").activate()
+  lr = currentSheet.getLastRow();   
+  
+  //var numberleft = MailApp.getRemainingDailyQuota();
+  //Logger.log(numberleft);
+  
+
+  //start from row 2    end at row 100
+  for (var i=2;i<=100;i++)   {
+    
+    var currentEmail = currentSheet.getRange(i,2).getValue();   //email is in column 2
+    if (currentEmail==""){
+      continue
+    }
+
+    var currentSubject = currentSheet.getRange(i,5).getValue();
+    var cc = currentSheet.getRange(i,3).getValue();
+    var bcc = currentSheet.getRange(i,4).getValue();
+    var message = currentSheet.getRange(i,6).getValue();
+    var facility = currentSheet.getRange(i,1).getValue();
+
+    
+    
+    //clinicians have orientation day tomorrow; start from row 2, column G
+    var data = currentSheet.getRange(2, 8, currentSheet.getLastRow(), 19).getValues();  
+    
+    
+    //build table
+    var body = "<div>"+message+"</div><br>";
+    body += "  <table border=”8”>"
+    body += "<tr>"
+    body += "<td><b>Facility</td>"
+    body += "<td><b>Worker Name</td>"
+    body += "<td><b>Email</td>"
+    body += "<td><b>Degree</td>"
+    body += "<td><b>Sun 4/3</td>"
+    body += "<td><b>Mon 4/4</td>"
+    body += "<td><b>Tue 4/5</td>"
+    body += "<td><b>Wed 4/6</td>"
+    body += "<td><b>Thu 4/7</td>"
+    body += "<td><b>Fri 4/8</td>"
+    body += "<td><b>Sat 4/9</td>"
+    body += "<td><b>Total Hours</td>"
+    body += "</b> </tr>"
+
+    for(var j=0;j<data.length; j++){
+      if (data[j][0] == facility){
+        body += "<tr>"
+        body += "<td>" + data[j][0] + "</td>"
+        body += "<td>" + data[j][1] + "</td>"
+        body += "<td>" + data[j][2] + "</td>"
+        body += "<td>" + data[j][3] + "</td>"
+        body += "<td>" + data[j][4] + "</td>"
+        body += "<td>" + data[j][5] + "</td>"
+        body += "<td>" + data[j][6] + "</td>"
+        body += "<td>" + data[j][7] + "</td>"
+        body += "<td>" + data[j][8] + "</td>"
+        body += "<td>" + data[j][9] + "</td>"
+        body += "<td>" + data[j][10] + "</td>"
+        body += "<td>" + data[j][11] + "</td>"
+        body += "</tr>"
+      }
+      }
+    //end of table tag
+    body +="</table>"
+
+    //signature
+
+    var LogoUrl = "https://media-exp1.licdn.com/dms/image/C4E0BAQF1A9nEKJ21Dg/company-logo_200_200/0/1582318118160?e=2159024400&v=beta&t=Q85q9_d_ZO87F4N2iajFPnZzQsE3PctWQIAZTq4cftY";
+
+    var googleLogoBlob = UrlFetchApp
+                         .fetch(LogoUrl)
+                         .getBlob()
+                         .setName("googleLogoBlob");
+
+    body +="<img src='cid:Logo'> <br>"+"Your Name <br>"
+
+    MailApp.sendEmail(currentEmail,currentSubject,"",{
+      htmlBody:body,
+      cc:cc,
+      bcc:bcc,
+      name: "YourEmail@email.com",
+      replyTo:"YourEmail@email.com",
+      inlineImages:
+      {
+        Logo: googleLogoBlob,
+      }
+
+    })
+  }
+}
